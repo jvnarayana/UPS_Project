@@ -31,7 +31,7 @@ namespace Interview
             services.AddControllers();
             services.AddScoped<IUserRepository, UserRepository>();
             //var connectionString = Configuration.GetSection("ConnectionString").GetChildren().Where(x => x.Value == "dbConnection");
-            services.AddDbContext<UPS_UsersContext>(options => options.UseSqlServer("Data Source=USC-W-GDLRV93;Initial Catalog=UPS_Users;User Id=GROUPINFRA\venkata.jadda;password=Ammulu$878;"));
+            services.AddDbContext<UPS_UsersContext>(options => options.UseSqlServer("dbConnection"));
              
             //services.AddDbContext<UPS_UsersContext>(options => options.UseSqlServer(connectionString.ToString()));
             

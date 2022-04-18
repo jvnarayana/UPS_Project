@@ -24,7 +24,14 @@ namespace Interview
 
         public int GetTransactionCountByUser(string userId)
         {
-            throw new NotImplementedException();
+            int count = 0;
+            var userList = _userDBContext.Users.FindAll(x => x.Id == userId);
+            foreach (var user in userList)
+            {
+                count++;
+            }
+            return count;
+
         }
 
         public decimal GetUnpaidAmountByUser(string userId)
@@ -47,7 +54,7 @@ namespace Interview
 
         public User GetUserById(string id)
         {
-            User u = new User();
+            
             var userDetails = _userDBContext.Users.Where(x=> x.Id== id).FirstOrDefault();
             return userDetails;
             
@@ -56,17 +63,36 @@ namespace Interview
         public IEnumerable<User> GetUsersByFirstAndLastName(string firstName, string lastName)
         {
             var _user = _userDBContext.Users.Where(x => x.FirstName == firstName && x.LastName == lastName);
-            return (IEnumerable<User>)_user.ToList();
+            return _user;
         }
 
         public List<User> GetUsersByIdInParallel(List<string> ids)
         {
-            throw new NotImplementedException();
+            List<User> users = new List<User>();
+            Parallel.ForEach(ids, id =>
+            {
+                 
+                users.Add(GetUserById(id));
+            });
+            return users;
         }
 
         public IEnumerable<User> GetUsersOlderThanGivenAge(int age)
         {
-            throw new NotImplementedException();
+            string currentYear = DateTime.Now.Year.ToString();
+            List<User> userList = new List<User>();
+            foreach (var user in _userDBContext.Users)
+            {
+                var olderAge = user.DateofBirth.Year - Convert.ToInt32(currentYear);
+                if (olderAge > 0)
+                {
+                    userList.Add(user);
+                }
+
+
+            }
+            return userList;
+
         }
 
         protected virtual void Dispose(bool disposing)
@@ -77,9 +103,6 @@ namespace Interview
                 {
                     _userDBContext.Dispose();
                 }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
                 disposedValue = true;
             }
         }
